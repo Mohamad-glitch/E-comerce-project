@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-commerce Platform</title>
-    <link rel="stylesheet" href="/Home-page.css">
+    <link rel="stylesheet" th:href="@{/Home-page.css}">
 </head>
 <body>
 <header>
@@ -16,7 +16,19 @@
             <li><a th:href="@{/about-us}">About Us</a></li>
             <li><a href="#">Contact</a></li>
             <li><a href="#">Cart</a></li>
-            <li><a th:href="@{/login}" class="login">Sign In</a></li> <!-- Added Sign In link -->
+            <li><a th:href="@{/login}" class="login">Sign In</a></li>
+
+            <!--
+              <li th:if="${#httpServletRequest.remoteUser == null}">
+                <a th:href="@{/login}" class="login">Sign In</a>
+            </li>
+            <li th:if="${#httpServletRequest.remoteUser != null}">
+                <a href="#" th:text="${#httpServletRequest.remoteUser}"></a>    show user name
+            <a th:href="@{/logout}">Logout</a>                                logout option
+            </li>
+            -->
+
+
         </ul>
     </nav>
     <input type="text" placeholder="Search..." id="search">

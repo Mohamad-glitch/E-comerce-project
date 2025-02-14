@@ -100,6 +100,13 @@
 <section class="login-section">
     <h1>Sign In</h1>
     <form action="#" th:action="@{/authenticateTheUser}" method="POST" >
+
+        <div th:if="${param.error}">
+            <i style="color: red">You have entered invalid email or password.</i>
+        </div>
+
+        <br>
+
         <label for="email">Email</label>
         <!--email -->
         <input type="text" id="email" name="username" placeholder="Enter your email" required>

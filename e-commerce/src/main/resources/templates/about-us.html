@@ -10,10 +10,14 @@
 <header>
     <nav>
         <ul>
-            <li><a th:href="@{/}">Home</a></li>
+
+            <li th:if="${#authorization.expression('isAuthenticated()')}"><a  th:href="@{/user-page}">Home</a></li>
+            <li th:unless="${#authorization.expression('isAuthenticated()')}" ><a  th:href="@{/}">Home</a></li>
             <li><a href="#">Shop</a></li>
             <li><a href="#">Contact</a></li>
-            <li><a th:href="@{/about-us}">About Us</a></li>
+            <li><a  th:href="@{/about-us}">About Us</a></li>
+
+
         </ul>
     </nav>
 </header>
