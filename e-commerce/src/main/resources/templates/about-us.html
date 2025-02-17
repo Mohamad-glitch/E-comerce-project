@@ -7,17 +7,18 @@
     <link rel="stylesheet" href="/about-us.css">
 </head>
 <body>
+
 <header>
     <nav>
         <ul>
-
-            <li th:if="${#authorization.expression('isAuthenticated()')}"><a  th:href="@{/user-page}">Home</a></li>
-            <li th:unless="${#authorization.expression('isAuthenticated()')}" ><a  th:href="@{/}">Home</a></li>
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/user-page}">Home</a>
+            </li>
+            <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/}">Home</a>
+            </li>
             <li><a href="#">Shop</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a  th:href="@{/about-us}">About Us</a></li>
-
-
+            <li><a th:href="@{/about-us}">About Us</a></li>
         </ul>
     </nav>
 </header>
@@ -32,8 +33,21 @@
     </div>
 </section>
 
+<!-- Contact Section -->
+<section class="contact">
+    <h2>Contact Us</h2>
+    <div class="contact-details">
+        <!-- NOT REAL INFO -->
+        <p><strong>Email:</strong> support@ecommerce.com</p>
+        <p><strong>Phone:</strong> +1 (123) 456-7890</p>
+        <p><strong>Address:</strong> 123 E-Commerce Street, Online City, USA</p>
+        <p>Feel free to reach out to us via email or phone. Our customer service team is available from 9 AM to 6 PM (Monday - Friday).</p>
+    </div>
+</section>
+
 <footer>
     <p>&copy; 2025 E-Commerce, All rights reserved.</p>
 </footer>
+
 </body>
 </html>

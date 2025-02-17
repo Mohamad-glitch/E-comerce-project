@@ -2,25 +2,33 @@ package com.example.ecommerce.config;
 
 
 
+import jakarta.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class Config {
-
+    @Autowired
+    EntityManager entityManager;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+
+
         http.authorizeHttpRequests(config ->
                 config
-                        .requestMatchers("/", "/login", "/**.css", "/images/**", "/about-us").permitAll() // Public pages
+                        .requestMatchers("/", "/login", "/**.css", "/images/**", "/about-us", "/Create-account").permitAll() // Public pages
                         .anyRequest().authenticated()
+
 
                 )
                 .formLogin(login ->
@@ -40,10 +48,23 @@ public class Config {
                         .permitAll()
                 );
 
-
+        http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
+
+    @Bean
+    public UserDetailsManager userDetailsManager(DataSource dataSource) {
+
+        JdbcUserDetailsManager theUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+        theUserDetailsManager.setUsersByUsernameQuery("select email, password, enabled from user where email=?");
+        theUserDetailsManager.setAuthoritiesByUsernameQuery("select email, role from user where email=?");
+        return theUserDetailsManager;
+
+    }
+
+/*
+
 
 
     @Bean
@@ -62,7 +83,7 @@ public class Config {
         return new InMemoryUserDetailsManager(user1, user2);
     }
 
-
+ */
 
 
 
