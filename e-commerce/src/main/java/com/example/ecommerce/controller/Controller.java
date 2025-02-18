@@ -33,6 +33,8 @@ public class Controller {
 
     @GetMapping("/about-us")
     public String aboutUs() {
+        userService.findUserByEmail("m1@gamil.com");
+
         return "about-us";
     }
 
@@ -57,7 +59,9 @@ public class Controller {
         return "Create-account-page";
     }
 
-
-
+    @GetMapping("/shop")
+    public String shop() {
+        return "shop-page";
+    }
 
 }

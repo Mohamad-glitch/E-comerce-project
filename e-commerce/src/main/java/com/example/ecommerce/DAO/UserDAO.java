@@ -1,11 +1,13 @@
 package com.example.ecommerce.DAO;
 
-import com.example.ecommerce.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface UserDAO extends JpaRepository<User, String> {
+import com.example.ecommerce.entity.User;
+
+public interface UserDAO  {
+
+    void saveUser(User user);
+
+    User findUserByEmail(String email);
 
 
 }

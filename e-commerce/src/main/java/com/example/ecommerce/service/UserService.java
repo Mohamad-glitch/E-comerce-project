@@ -26,7 +26,13 @@ public class UserService {
     public void createUser(User user) {
         user.setRole("USER");
         user.setPassword("{bcrypt}" +  new BCryptPasswordEncoder().encode(user.getPassword()));
-        userDAO.save(user);
+        userDAO.saveUser(user);
+    }
+
+    @Transactional
+    public void findUserByEmail(String email) {
+        userDAO.findUserByEmail(email);
+
     }
 
 
