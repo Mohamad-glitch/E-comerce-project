@@ -1,6 +1,10 @@
 package com.example.ecommerce.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "user")
@@ -9,12 +13,18 @@ public class User {
 
     @Id
     @Column(name = "email")
+    @NotNull(message = "is required")
+    @Email
     private String email;
 
     @Column(name = "full_name")
+    @NotNull(message = "is required")
+    @Size(min = 5, max = 50 , message = "the name should have at least 5 characters and at most 50")
     private String fullName;
 
     @Column(name = "password")
+    @NotNull(message = "is required")
+    @Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*()_+=-]{5,20}$", message = "the password Must be 5-20 characters, including letters, digits, and safe special characters.")
     private String password;
 
     @Column(name = "role")

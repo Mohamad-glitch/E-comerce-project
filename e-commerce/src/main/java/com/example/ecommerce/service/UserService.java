@@ -30,9 +30,8 @@ public class UserService {
     }
 
     @Transactional
-    public void findUserByEmail(String email) {
-        userDAO.findUserByEmail(email);
-
+    public User findUserByEmail(String email) {
+        return   userDAO.findUserByEmail(email);
     }
 
 
