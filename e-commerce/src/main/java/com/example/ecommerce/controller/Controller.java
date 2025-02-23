@@ -1,8 +1,11 @@
 package com.example.ecommerce.controller;
 
 
+import com.example.ecommerce.entity.Cart;
+import com.example.ecommerce.entity.Orders;
+import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.User;
-import com.example.ecommerce.service.UserService;
+import com.example.ecommerce.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -11,21 +14,50 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.sql.Timestamp;
+
 
 @org.springframework.stereotype.Controller
 public class Controller {
-
-
     UserService userService;
+    ProductService productService;
+    CartService cartService;
+    OrderServiceImpl orderService;
 
     @Autowired
-    public Controller(UserService userService) {
+    public Controller(UserServiceImpl userService, ProductServiceImpl
+            productService, CartServiceImpl cartService,
+                      OrderServiceImpl orderService) {
         this.userService = userService;
+        this.productService = productService;
+        this.cartService = cartService;
+        this.orderService = orderService;
     }
 
     // show home page for every one if he was logged in or not
     @GetMapping("/")
     public String index() {
+        User u = new User("Mohamad3@gmail.com", "Mohamad7", "A(123-123");
+
+        Cart c = new Cart();
+
+        Product p = new Product("TV", "Electronic",
+                "whatever", "whatever2", 100.0, 5);
+
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        Orders o = new Orders(12, ts);
+
+
+        u.addOrder(o);
+        userService.saveUser(u);
+
+/*
+        c.addUser(u);
+        p.addCarts(c);
+ */
+
+
+
         return "Home-page";
     }
 
@@ -38,8 +70,6 @@ public class Controller {
     // show the about us page
     @GetMapping("/about-us")
     public String aboutUs() {
-        userService.findUserByEmail("m1@gamil.com");
-
         return "about-us";
     }
 
@@ -61,10 +91,12 @@ public class Controller {
         User temp = userService.findUserByEmail(user.getEmail());
         if(temp != null) {
             result.rejectValue("email", "email.exists", "There is already an account with that email");
+            //free the memory
+            temp = null;
             return "Create-account-page";
         }
 
-        userService.createUser(user);
+        userService.saveUser(user);
 
         return "redirect:/login";
     }

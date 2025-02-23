@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -24,14 +27,29 @@ public class User {
 
     @Column(name = "password")
     @NotNull(message = "is required")
-    @Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*()_+=-]{5,20}$", message = "the password Must be 5-20 characters, including letters, digits, and safe special characters.")
+    @Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*()_+=-]{5,20}$", message = "the password Must be 5-20 characters, including letters, digits, !@#$%^&*()_+=-")
     private String password;
 
     @Column(name = "role")
     private String role;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user",cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
+            CascadeType.DETACH, CascadeType.MERGE})
     private Cart cart;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Orders> ordersList;
+
+    public void addOrder(Orders orders) {
+        if (ordersList == null) {
+            ordersList = new ArrayList<>();
+        }
+        ordersList.add(orders);
+    }
+
+    public List<Orders> getOrdersList() {
+        return ordersList;
+    }
 
     public User() {
     }
@@ -80,7 +98,7 @@ public class User {
         return cart;
     }
 
-    public void setCart(Cart cart) {
+    public void addCart(Cart cart) {
         this.cart = cart;
     }
 

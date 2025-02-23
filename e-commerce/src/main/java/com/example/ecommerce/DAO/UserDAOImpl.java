@@ -19,12 +19,12 @@ public class UserDAOImpl implements UserDAO {
         this.cartDAO = new CartDAOImpl(entityManager);
     }
 
-    // save user
+    // saveProduct user
     @Override
     public void saveUser(User user) {
         entityManager.persist(user);
         Cart cart = new Cart();
-        cart.setUser(user);
+        cart.addUser(user);
         cartDAO.saveCart(cart);
 
     }

@@ -1,6 +1,10 @@
 package com.example.ecommerce.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.query.Order;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -30,7 +34,45 @@ public class Product {
     private int quantity;
 
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
+            CascadeType.DETACH, CascadeType.MERGE})
+    @JoinTable(
+            name = "cart_items",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "cart_id")
+    )
+    private List<Cart> cartList;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
+            CascadeType.DETACH, CascadeType.MERGE})
+    @JoinTable(
+            name = "order_items",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id")
+    )
+    private List<Orders> orderList;
+
+    public void addOrder(Orders order) {
+        if(orderList == null) {
+            orderList = new ArrayList<>();
+        }
+
+        orderList.add(order);
+    }
+
+
+    public List<Cart> getCartList() {
+        return cartList;
+    }
+
+    public void addCarts(Cart cart) {
+        if (cartList == null) {
+            this.cartList = new ArrayList<>();
+        }
+
+
+        this.cartList.add(cart);
+    }
 
     public Product() {
     }
@@ -99,6 +141,8 @@ public class Product {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+
 
     @Override
     public String toString() {

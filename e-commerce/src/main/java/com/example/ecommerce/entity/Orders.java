@@ -3,6 +3,8 @@ package com.example.ecommerce.entity;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -14,7 +16,7 @@ public class Orders {
     private int id;
 
     @Column(name = "user_email")
-    private String username;
+    private String userEmail;
 
     @Column(name = "total_price")
     private double price;
@@ -22,11 +24,46 @@ public class Orders {
     @Column(name = "order_date")
     private Timestamp date;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_email", referencedColumnName = "email")
+    private User user;
+
+
+/*
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
+            CascadeType.DETACH, CascadeType.MERGE})
+    @JoinTable(
+            name = "order_items",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> productList;
+
+    public void addProduct(Product product) {
+        if(productList == null) {
+            productList = new ArrayList<>();
+        }
+
+        productList.add(product);
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+*/
+
+    public void addUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
     public Orders() {
     }
 
-    public Orders(String username, double price, Timestamp date) {
-        this.username = username;
+    public Orders( double price, Timestamp date) {
         this.price = price;
         this.date = date;
     }
@@ -39,12 +76,12 @@ public class Orders {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public double getPrice() {
@@ -68,7 +105,7 @@ public class Orders {
     public String toString() {
         return "Orders{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+                ", userEmail='" + userEmail + '\'' +
                 ", price=" + price +
                 ", date=" + date +
                 '}';

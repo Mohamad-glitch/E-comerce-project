@@ -6,7 +6,7 @@ USE `ecommerce`;
 
 -- Create a user table for authentication and additional user details
 CREATE TABLE `user` (
-  `email` VARCHAR(128) NOT NULL,  -- Acts as the username
+  `email` VARCHAR(128) NOT NULL,  -- Acts as the userEmail
   `full_name` VARCHAR(128) DEFAULT NULL,
   `password` VARCHAR(255) NOT NULL,  -- Store hashed passwords
   `enabled` TINYINT DEFAULT 1,  -- 1 = enabled, 0 = disabled
