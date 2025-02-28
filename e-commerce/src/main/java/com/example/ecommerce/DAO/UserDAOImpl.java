@@ -14,9 +14,9 @@ public class UserDAOImpl implements UserDAO {
 
     // constructor injection for dependency
     @Autowired
-    public UserDAOImpl(EntityManager entityManager) {
+    public UserDAOImpl(EntityManager entityManager, CartDAO cartDAO) {
         this.entityManager = entityManager;
-        this.cartDAO = new CartDAOImpl(entityManager);
+        this.cartDAO = cartDAO;
     }
 
     // saveProduct user
@@ -32,15 +32,7 @@ public class UserDAOImpl implements UserDAO {
     //get user by email
     @Override
     public User findUserByEmail(String email) {
-        User user = entityManager.find(User.class, "m1@gamil.com");
-
-        System.out.println(user);
-        System.out.println(user.getEmail());
-        System.out.println(user.getPassword());
-        System.out.println(user.getCart());
-
-
-
+        User user = entityManager.find(User.class, email);
         return user;
     }
 }

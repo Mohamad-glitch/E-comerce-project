@@ -62,6 +62,13 @@ public class Controller {
     // create new user using http methods
     @PostMapping("/Create-account")
     public String createAccount(@Valid @ModelAttribute User user, BindingResult result) {
+
+        // Validate the raw password
+        String password = user.getPassword();
+        if (!password.matches("^[a-zA-Z0-9!@#$%^&*()_+=-]{5,50}$")) {
+            result.rejectValue("password", "password.invalid", "Password must be 5-50 characters, including letters, digits, and special characters.");
+        }
+
         if(result.hasErrors()) {
             return "Create-account-page";
         }

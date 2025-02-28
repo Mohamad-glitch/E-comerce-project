@@ -49,7 +49,7 @@ public class Config {
                         .permitAll()
                 );
 
-        http.csrf(AbstractHttpConfigurer::disable);
+
 
         return http.build();
     }
@@ -58,15 +58,21 @@ public class Config {
     public UserDetailsManager userDetailsManager(DataSource dataSource) {
 
         JdbcUserDetailsManager theUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-        theUserDetailsManager.setUsersByUsernameQuery("select email, password, enabled from user where email=?");
-        theUserDetailsManager.setAuthoritiesByUsernameQuery("select email, role from user where email=?");
+        theUserDetailsManager.setUsersByUsernameQuery("select email, password, enabled from users where email=?");
+        theUserDetailsManager.setAuthoritiesByUsernameQuery("select email, role from users where email=?");
         return theUserDetailsManager;
 
     }
 
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+
 /*
-
-
 
     @Bean
     public InMemoryUserDetailsManager userDetailsManager() {

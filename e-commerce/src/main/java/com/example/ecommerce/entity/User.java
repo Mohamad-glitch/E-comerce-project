@@ -27,7 +27,6 @@ public class User {
 
     @Column(name = "password")
     @NotNull(message = "is required")
-    @Pattern(regexp = "^[a-zA-Z0-9!@#$%^&*()_+=-]{5,20}$", message = "the password Must be 5-20 characters, including letters, digits, !@#$%^&*()_+=-")
     private String password;
 
     @Column(name = "role")
