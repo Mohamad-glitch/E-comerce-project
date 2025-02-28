@@ -24,12 +24,13 @@ public class Orders {
     @Column(name = "order_date")
     private Timestamp date;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_email", referencedColumnName = "email")
+    /*
+    @ManyToOne
+    @JoinColumn(name = "user_email")
     private User user;
+     */
 
 
-/*
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
             CascadeType.DETACH, CascadeType.MERGE})
     @JoinTable(
@@ -50,15 +51,7 @@ public class Orders {
     public List<Product> getProductList() {
         return productList;
     }
-*/
 
-    public void addUser(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
 
     public Orders() {
     }
@@ -76,14 +69,28 @@ public class Orders {
         this.id = id;
     }
 
+
+
     public String getUserEmail() {
-        return userEmail;
+        return this.userEmail;
     }
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
+/*
+public void setUser(User user) {
+        this.user = user;
+    }
+public void addUser(User user) {
+        this.user = user;
+    }
 
+    public User getUser() {
+        return user;
+    }
+
+*/
     public double getPrice() {
         return price;
     }
