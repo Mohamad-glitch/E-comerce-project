@@ -2,6 +2,7 @@ package com.example.ecommerce.controller;
 
 
 import com.example.ecommerce.entity.Cart;
+import com.example.ecommerce.entity.Orders;
 import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.service.*;
@@ -35,7 +36,6 @@ public class Controller {
     // show home page for every one if he was logged in or not
     @GetMapping("/")
     public String index() {
-
         return "Home-page";
     }
 
