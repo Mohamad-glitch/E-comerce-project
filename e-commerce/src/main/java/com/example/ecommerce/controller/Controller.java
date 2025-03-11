@@ -1,9 +1,6 @@
 package com.example.ecommerce.controller;
 
 
-import com.example.ecommerce.entity.Cart;
-import com.example.ecommerce.entity.Orders;
-import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.service.*;
 import jakarta.validation.Valid;
