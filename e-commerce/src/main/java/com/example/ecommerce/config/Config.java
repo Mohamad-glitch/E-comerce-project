@@ -41,7 +41,10 @@ public class Config {
                                 .permitAll()
                 )
 
-
+                .exceptionHandling(exception ->
+                        exception
+                                .accessDeniedPage("/access-denied")
+                        )
 
                 .logout(logout -> logout
                        //.logoutUrl("/logout")

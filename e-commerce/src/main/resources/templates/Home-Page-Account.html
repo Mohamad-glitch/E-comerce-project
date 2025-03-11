@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,6 +17,9 @@
       <li><a th:href="@{/about-us}">About Us</a></li>
       <li><a href="#">Cart</a></li>
 
+      <li sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/add-product}">add items</a>
+      </li>
 
       <li th:if="${#authentication}">
 
