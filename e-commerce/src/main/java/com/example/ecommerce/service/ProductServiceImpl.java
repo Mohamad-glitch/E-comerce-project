@@ -6,6 +6,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -20,5 +22,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void saveProduct(Product product) {
         productDAO.saveProduct(product);
+    }
+
+    @Transactional
+    public List<Product> getAllProducts(){
+        return productDAO.getAllProducts();
     }
 }

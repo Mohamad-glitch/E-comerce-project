@@ -27,7 +27,8 @@ public class Config {
 
         http.authorizeHttpRequests(config ->
                 config
-                        .requestMatchers("/", "/login", "/**.css", "/images/**", "/about-us", "/Create-account" , "/shop").permitAll() // Public pages
+                        .requestMatchers("/", "/login", "/**.css", "/images/**", "/about-us", "/Create-account" , "/shop", "/product-images/**").permitAll() // Public pages
+                        .requestMatchers("/add-product").hasRole("ADMIN")
                         .anyRequest().authenticated()
 
 

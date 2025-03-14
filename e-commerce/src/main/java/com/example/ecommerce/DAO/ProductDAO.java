@@ -17,4 +17,6 @@ public interface ProductDAO {
 
     List<Product> getAllProductsByCategory(String category);
 
+    List<Product> getAllProducts();
+
 }

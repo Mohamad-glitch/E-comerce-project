@@ -1,6 +1,7 @@
 package com.example.ecommerce.controller;
 
 
+import com.example.ecommerce.DAO.ProductDAOImpl;
 import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.service.*;
@@ -8,23 +9,21 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @org.springframework.stereotype.Controller
 public class Controller {
+    private final ProductDAOImpl productDAOImpl;
     UserService userService;
     ProductService productService;
     CartService cartService;
@@ -32,12 +31,12 @@ public class Controller {
 
     @Autowired
     public Controller(UserServiceImpl userService, ProductServiceImpl
-            productService, CartServiceImpl cartService
-                     ) {
+            productService, CartServiceImpl cartService,
+                      ProductDAOImpl productDAOImpl) {
         this.userService = userService;
         this.productService = productService;
         this.cartService = cartService;
-
+        this.productDAOImpl = productDAOImpl;
     }
     // note if the user saved in the database the role should be like this ROLE_(the role u want )
     // show home page for every one if he was logged in or not
@@ -87,6 +86,7 @@ public class Controller {
             temp = null;
             return "Create-account-page";
         }
+        user.setRole("ROLE_USER");
 
         userService.saveUser(user);
 
@@ -101,9 +101,10 @@ public class Controller {
         return "Create-account-page";
     }
 
-    // show shop page "still working on it"
+    // shop page work fine
     @GetMapping("/shop")
-    public String shop() {
+    public String shop(Model model) {
+        model.addAttribute("products", productService.getAllProducts());
         return "shop-page";
     }
 
@@ -124,6 +125,13 @@ public class Controller {
         return "redirect:/user-page";
     }
 
+    // this for access denied page if the user is not authorized to go the page, then it will appear this page instead
+    //this page will send hit to home page after login (he does not have to log in again)
+    @GetMapping("/access-denied")
+    public String accessDenied() {
+        return "not-authorize";
+    }
+
 
 
     // file handling
@@ -132,7 +140,8 @@ public class Controller {
 
         try {
             // Define the path to the directory where images will be saved
-            String directoryPath = "C:\\Users\\mshlo\\OneDrive\\Desktop\\images";
+            String directoryPath = "src/main/resources/static/product-images";
+            String photoNameInDB = "/product-images/";
             File directory = new File(directoryPath);
 
             // Create the directory if it doesn't exist
@@ -142,13 +151,14 @@ public class Controller {
 
             // Generate a unique file name to avoid conflicts
             String fileName = System.currentTimeMillis() + "_" + itemPhoto.getOriginalFilename();
+            photoNameInDB += fileName;
             Path filePath = Paths.get(directoryPath, fileName);
 
             // Save the file to the directory
             Files.write(filePath, itemPhoto.getBytes());
 
             // Return the absolute path of the saved file
-            return filePath.toAbsolutePath().toString();
+            return photoNameInDB;
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to save image: " + e.getMessage());

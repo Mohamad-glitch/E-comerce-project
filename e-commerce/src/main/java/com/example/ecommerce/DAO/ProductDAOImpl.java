@@ -2,6 +2,7 @@ package com.example.ecommerce.DAO;
 
 import com.example.ecommerce.entity.Product;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -41,5 +42,11 @@ public class ProductDAOImpl implements ProductDAO {
     @Override
     public List<Product> getAllProductsByCategory(String category) {
         return List.of();
+    }
+
+    @Override
+    public List<Product> getAllProducts(){
+        TypedQuery<Product> query = entityManager.createQuery("select p from Product p", Product.class);
+        return query.getResultList();
     }
 }

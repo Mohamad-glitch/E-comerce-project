@@ -8,7 +8,7 @@ CREATE TABLE users (
     full_name VARCHAR(128) DEFAULT NULL,
     password VARCHAR(255) NOT NULL,
     enabled TINYINT DEFAULT 1,
-    role VARCHAR(45) DEFAULT 'USER',
+    role VARCHAR(45) DEFAULT 'ROLE_USER',
     PRIMARY KEY (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

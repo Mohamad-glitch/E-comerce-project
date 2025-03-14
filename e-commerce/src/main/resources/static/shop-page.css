@@ -4,20 +4,28 @@ body {
     padding: 0;
     background-color: #f8f8f8;
     text-align: center;
+    padding-top: 80px; /* Adjusted for fixed header */
 }
 
 header {
-    background-color: #333;
+    background: #333;
     color: white;
-    padding: 20px;
-    font-size: 24px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 .shop-container {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
-    margin: 20px;
+    margin-top: 10px;
 }
 
 #product-list {
@@ -34,6 +42,8 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 250px;
     text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 .product-card img {
@@ -77,4 +87,18 @@ header {
 
 .buy-now:hover {
     background-color: #d83b00;
+}
+
+.description {
+    font-size: 14px;
+    color: #555;
+    margin: 10px 0;
+}
+
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
 }
