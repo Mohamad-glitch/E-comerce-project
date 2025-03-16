@@ -2,6 +2,8 @@ package com.example.ecommerce.controller;
 
 
 import com.example.ecommerce.DAO.ProductDAOImpl;
+import com.example.ecommerce.entity.Cart;
+import com.example.ecommerce.entity.Orders;
 import com.example.ecommerce.entity.Product;
 import com.example.ecommerce.entity.User;
 import com.example.ecommerce.service.*;
@@ -17,6 +19,7 @@ import java.nio.file.Files;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,6 +135,13 @@ public class Controller {
         return "not-authorize";
     }
 
+
+    @GetMapping("/add-to-cart")
+    public String addToCart(@ModelAttribute Orders orders, Principal principal) {
+        User temp = userService.findUserByEmail(principal.getName());
+
+        return "add-to-cart";
+    }
 
 
     // file handling

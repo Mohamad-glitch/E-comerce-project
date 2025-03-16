@@ -12,11 +12,27 @@
     <div class="logo">E-commerce</div>
     <nav>
         <ul>
-            <li><a th:href="@{/}">Home</a></li>
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/user-page}">Home</a>
+            </li>
+            <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/}">Home</a>
+            </li>
             <li><a th:href="@{/shop}">Shop</a></li>
             <li><a th:href="@{/about-us}">About Us</a></li>
             <li><a href="#">Cart</a></li>
-            <li><a th:href="@{/login}" class="login">Sign In</a></li>
+
+            <!--if the user was logged in then he can log out if not show log in-->
+            <li th:if="${#authorization.expression('isAuthenticated()')}">
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="logout" style="background: #2fff44 "/>
+                </form>
+            </li>
+
+            <li th:unless="${#authorization.expression('isAuthenticated()')}">
+                <a th:href="@{/login}" class="login">Sign In</a>
+            </li>
+
         </ul>
     </nav>
     <input type="text" placeholder="Search..." id="search">
@@ -30,6 +46,12 @@
             <h2 th:text="${product.name}"></h2>
             <p class="price" th:text="'$' + ${product.price}"></p>
             <p class="description" th:text="${product.description}"></p>
+            <div class="quantity-selector">
+                <label>quantity :  </label>
+                <input type="number" class="quantity" id="user-amount" value="1" min="1" th:max="${product.quantity}">
+
+                <label>Max Available : <span th:text="${product.quantity}"></span></label>
+            </div>
             <button class="add-to-cart">Add to Cart</button>
             <button class="buy-now">Buy Now</button>
         </div>

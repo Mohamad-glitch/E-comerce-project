@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
                 xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E-commerce Platform</title>
-  <link rel="stylesheet" th:href="@{/Home-page.css}">
-</head>
+
 <body>
 <header>
+  <link rel="stylesheet" href="/Home-page.css">
   <div class="logo">E-commerce</div>
   <nav>
     <ul>
@@ -28,13 +24,7 @@
          <input type="submit" value="logout" style="background: #2fff44 "/>
 
         </form>
-
-
       </li>
-
-
-       <!--   -->
-
     </ul>
   </nav>
   <input type="text" placeholder="Search..." id="search">
@@ -43,7 +33,6 @@
 <section class="hero">
   <h1>Welcome to Our E-commerce Store!</h1>
   <p>Shop the best products at unbeatable prices.</p>
-  <button onclick="location.href='#shop'">Shop Now</button>
 </section>
 
 <section class="categories">

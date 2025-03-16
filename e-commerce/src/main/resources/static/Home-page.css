@@ -82,3 +82,44 @@ nav ul li a.login {
 nav ul li a.login:hover {
     color: #0056b3;
 }
+
+/* Existing CSS remains the same */
+
+/* Header adjustments */
+header {
+    background: #333;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Search bar styling */
+#search {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+    margin-right: 10px; /* Space between search bar and logout button */
+}
+
+/* Logout button styling */
+.logout-form {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between search bar and logout button */
+}
+
+.logout-form input[type="submit"] {
+    background: #2fff44;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    color: #333;
+    cursor: pointer;
+}
+
+.logout-form input[type="submit"]:hover {
+    background: #28cc3a;
+}
