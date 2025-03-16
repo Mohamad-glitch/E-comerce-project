@@ -1,7 +1,6 @@
 package com.example.ecommerce.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.query.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +32,28 @@ public class Product {
     @Column(name = "stock_quantity")
     private int quantity;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItems> cartItems = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
-            CascadeType.DETACH, CascadeType.MERGE})
-    @JoinTable(
-            name = "cart_items",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "cart_id")
-    )
-    private List<Cart> cartList;
+
+    public List<CartItems> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItems> cartItems) {
+        this.cartItems = cartItems;
+    }
+
+
+    // Helper method to add CartItems
+    public void addCartItems(CartItems cartItem) {
+        if (cartItems == null) {
+            cartItems = new ArrayList<>();
+        }
+        cartItems.add(cartItem);
+        cartItem.setProduct(this); // Maintain bidirectional relationship
+    }
+
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
             CascadeType.DETACH, CascadeType.MERGE})
@@ -61,18 +73,6 @@ public class Product {
     }
 
 
-    public List<Cart> getCartList() {
-        return cartList;
-    }
-
-    public void addCarts(Cart cart) {
-        if (cartList == null) {
-            this.cartList = new ArrayList<>();
-        }
-
-
-        this.cartList.add(cart);
-    }
 
     public Product() {
     }

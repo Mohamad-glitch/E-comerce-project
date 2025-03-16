@@ -2,10 +2,8 @@ package com.example.ecommerce.controller;
 
 
 import com.example.ecommerce.DAO.ProductDAOImpl;
-import com.example.ecommerce.entity.Cart;
-import com.example.ecommerce.entity.Orders;
-import com.example.ecommerce.entity.Product;
-import com.example.ecommerce.entity.User;
+import com.example.ecommerce.entity.*;
+import com.example.ecommerce.repoTest.CartItemDAO;
 import com.example.ecommerce.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +28,20 @@ public class Controller {
     UserService userService;
     ProductService productService;
     CartService cartService;
+    CartItemDAO cartItemDAO;
 
 
     @Autowired
     public Controller(UserServiceImpl userService, ProductServiceImpl
-            productService, CartServiceImpl cartService,
+            productService, CartServiceImpl cartService, CartItemDAO cartItemDAO,
                       ProductDAOImpl productDAOImpl) {
         this.userService = userService;
         this.productService = productService;
         this.cartService = cartService;
         this.productDAOImpl = productDAOImpl;
+        this.cartItemDAO = cartItemDAO;
     }
+
     // note if the user saved in the database the role should be like this ROLE_(the role u want )
     // show home page for every one if he was logged in or not
     @GetMapping("/")
@@ -81,7 +82,7 @@ public class Controller {
         if(result.hasErrors()) {
             return "Create-account-page";
         }
-
+        // check if the user email is already in database if (yes) return message error
         User temp = userService.findUserByEmail(user.getEmail());
         if(temp != null) {
             result.rejectValue("email", "email.exists", "There is already an account with that email");
@@ -90,6 +91,11 @@ public class Controller {
             return "Create-account-page";
         }
         user.setRole("ROLE_USER");
+
+        // create a cart for every user when is created
+        Cart cart = new Cart();
+        cart.addUser(user);
+        user.addCart(cart);
 
         userService.saveUser(user);
 

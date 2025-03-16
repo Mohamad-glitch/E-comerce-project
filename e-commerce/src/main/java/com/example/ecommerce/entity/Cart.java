@@ -19,25 +19,27 @@ public class Cart {
     @JoinColumn(name = "user_email", referencedColumnName = "email")
     private User user;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
-            CascadeType.DETACH, CascadeType.MERGE})
-    @JoinTable(
-            name = "cart_items",
-            joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> productList;
-
-    public List<Product> getProductList() {
-        return productList;
+    public User getUser() {
+        return user;
     }
 
-    public void addProduct(Product product) {
-        if(productList == null) {
-            productList = new ArrayList<>();
-        }
+    public void addUser(User user) {
+        this.user = user;
+    }
 
-        this.productList.add(product);
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private List<CartItems> cartItems;
+
+    public List<CartItems> getCartItems() {
+        return cartItems;
+    }
+
+    public void addCartItem(CartItems cartItem) {
+        if (cartItems == null) {
+            cartItems = new ArrayList<>();
+        }
+        cartItems.add(cartItem);
+        cartItem.setCart(this); // Maintain bidirectional relationship
     }
 
 
@@ -57,13 +59,7 @@ public class Cart {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void addUser(User user) {
-        this.user = user;
-    }
 
     @Override
     public String toString() {
