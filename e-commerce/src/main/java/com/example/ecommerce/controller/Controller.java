@@ -18,6 +18,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,17 +30,19 @@ public class Controller {
     ProductService productService;
     CartService cartService;
     CartItemDAO cartItemDAO;
+    OrderService orderService;
 
 
     @Autowired
     public Controller(UserServiceImpl userService, ProductServiceImpl
             productService, CartServiceImpl cartService, CartItemDAO cartItemDAO,
-                      ProductDAOImpl productDAOImpl) {
+                      ProductDAOImpl productDAOImpl, OrderServiceImpl orderService) {
         this.userService = userService;
         this.productService = productService;
         this.cartService = cartService;
         this.productDAOImpl = productDAOImpl;
         this.cartItemDAO = cartItemDAO;
+        this.orderService = orderService;
     }
 
     // note if the user saved in the database the role should be like this ROLE_(the role u want )
@@ -141,9 +144,32 @@ public class Controller {
         return "not-authorize";
     }
 
+    @GetMapping("/buy-now")
+    public String buyNow( Model model , @RequestParam int productId,
+                          @RequestParam Long quantity, Principal principal) {
+        Product product = productService.getProductById(productId);
+        User user = userService.findUserByEmail(principal.getName());
+
+        Orders order = new Orders((quantity * product.getPrice()), new Timestamp(System.currentTimeMillis()));
+        order.addProduct(product);
+        order.addUser(user);
+
+
+        Payment payment = new Payment();
+        payment.addUser(user);
+
+        model.addAttribute("price", (quantity * product.getPrice()));
+        model.addAttribute("product", product);
+        model.addAttribute("quantity", quantity);
+        model.addAttribute("payment", payment);
+
+        return "buy-now";
+    }
+
 
     @GetMapping("/add-to-cart")
-    public String addToCart(@ModelAttribute Orders orders, Principal principal) {
+    public String addToCart(Model model , @RequestParam int productId,
+                            @RequestParam Long quantity, Principal principal) {
         User temp = userService.findUserByEmail(principal.getName());
 
         return "add-to-cart";

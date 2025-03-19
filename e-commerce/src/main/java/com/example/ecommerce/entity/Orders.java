@@ -15,20 +15,23 @@ public class Orders {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "user_email")
-    private String userEmail;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "user_email")
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void addUser(User user) {
+        this.user = user;
+    }
 
     @Column(name = "total_price")
     private double price;
 
     @Column(name = "order_date")
     private Timestamp date;
-
-    /*
-    @ManyToOne
-    @JoinColumn(name = "user_email")
-    private User user;
-     */
 
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH,
@@ -69,28 +72,6 @@ public class Orders {
         this.id = id;
     }
 
-
-
-    public String getUserEmail() {
-        return this.userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-/*
-public void setUser(User user) {
-        this.user = user;
-    }
-public void addUser(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-*/
     public double getPrice() {
         return price;
     }
@@ -112,7 +93,7 @@ public void addUser(User user) {
     public String toString() {
         return "Orders{" +
                 "id=" + id +
-                ", userEmail='" + userEmail + '\'' +
+                ", userEmail='" + user + '\'' +
                 ", price=" + price +
                 ", date=" + date +
                 '}';

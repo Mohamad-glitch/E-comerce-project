@@ -49,6 +49,22 @@ public class User {
         return ordersList;
     }
 
+
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Payment> paymentList;
+
+    public void addPayment(Payment payment) {
+        if (paymentList == null) {
+            paymentList = new ArrayList<>();
+        }
+        paymentList.add(payment);
+    }
+
+    public List<Payment> getPaymentList() {
+        return paymentList;
+    }
+
+
     public User() {
     }
 

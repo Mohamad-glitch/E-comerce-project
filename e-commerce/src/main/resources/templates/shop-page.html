@@ -52,8 +52,18 @@
 
                 <label>Max Available : <span th:text="${product.quantity}"></span></label>
             </div>
-            <button class="add-to-cart">Add to Cart</button>
-            <button class="buy-now">Buy Now</button>
+
+            <form th:action="@{/buy-now}" method="GET">
+                <input type="hidden" name="productId" th:value="${product.id}">
+                <input type="hidden" name="quantity" th:value="${product.quantity}">
+                <button type="submit" class="add-to-cart">Add to Cart</button>
+            </form>
+
+            <form th:action="@{/buy-now}" method="POST">
+                <input type="hidden" name="productId" th:value="${product.id}">
+                <input type="hidden" name="quantity" th:value="${product.quantity}">
+                <button type="submit" class="buy-now">Buy Now</button>
+            </form>
         </div>
     </div>
 </main>

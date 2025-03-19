@@ -52,3 +52,18 @@ CREATE TABLE order_items (
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
+
+CREATE TABLE payment (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_email VARCHAR(128) NOT NULL,
+    full_name VARCHAR(128) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(100) NOT NULL,
+    zip_code VARCHAR(20) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+    card_number VARCHAR(16) NOT NULL,  -- Assuming card number is stored as a string
+    expiry_date VARCHAR(5) NOT NULL,  -- Format: MM/YY
+    cvv VARCHAR(3) NOT NULL,          -- Assuming CVV is stored as a string
+    FOREIGN KEY (user_email) REFERENCES users(email) ON DELETE CASCADE
+);
