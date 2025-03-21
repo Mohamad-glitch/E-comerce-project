@@ -46,24 +46,19 @@
             <h2 th:text="${product.name}"></h2>
             <p class="price" th:text="'$' + ${product.price}"></p>
             <p class="description" th:text="${product.description}"></p>
+
+            <form th:action="@{/add-to-cart}" method="GET">
             <div class="quantity-selector">
                 <label>quantity :  </label>
-                <input type="number" class="quantity" id="user-amount" value="1" min="1" th:max="${product.quantity}">
-
+                <input type="number" class="quantity" id="userAmount" name="userAmount" value="1" min="1" th:max="${product.quantity}">
                 <label>Max Available : <span th:text="${product.quantity}"></span></label>
             </div>
 
-            <form th:action="@{/buy-now}" method="GET">
                 <input type="hidden" name="productId" th:value="${product.id}">
                 <input type="hidden" name="quantity" th:value="${product.quantity}">
                 <button type="submit" class="add-to-cart">Add to Cart</button>
             </form>
 
-            <form th:action="@{/buy-now}" method="POST">
-                <input type="hidden" name="productId" th:value="${product.id}">
-                <input type="hidden" name="quantity" th:value="${product.quantity}">
-                <button type="submit" class="buy-now">Buy Now</button>
-            </form>
         </div>
     </div>
 </main>

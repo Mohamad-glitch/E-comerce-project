@@ -22,9 +22,6 @@ public class PaymentServiceImpl implements PaymentService {
         paymentDAO.save(payment);
     }
 
-    public Payment getPaymentById(long id) {
-        return paymentDAO.getPaymentsById(id);
-    }
 
     public List<Payment> getAllPayments() {
         return paymentDAO.findAll();
@@ -34,9 +31,7 @@ public class PaymentServiceImpl implements PaymentService {
        paymentDAO.save(payment);
     }
 
-    public void deletePaymentById(long id) {
-        paymentDAO.deletePaymentById(id);
-    }
+
 
 
 }

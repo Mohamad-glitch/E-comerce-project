@@ -19,8 +19,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @org.springframework.stereotype.Controller
@@ -144,35 +142,57 @@ public class Controller {
         return "not-authorize";
     }
 
+
+    // this is not functioning well it will have no use
     @GetMapping("/buy-now")
-    public String buyNow( Model model , @RequestParam int productId,
-                          @RequestParam Long quantity, Principal principal) {
+    public String buyNow(Model model , @RequestParam Integer productId,
+                          @RequestParam("userAmount") int userAmount, Principal principal) {
         Product product = productService.getProductById(productId);
         User user = userService.findUserByEmail(principal.getName());
 
-        Orders order = new Orders((quantity * product.getPrice()), new Timestamp(System.currentTimeMillis()));
+        System.out.println(userAmount);
+
+
+        Orders order = new Orders((userAmount * product.getPrice()), new Timestamp(System.currentTimeMillis()));
         order.addProduct(product);
         order.addUser(user);
-
 
         Payment payment = new Payment();
         payment.addUser(user);
 
-        model.addAttribute("price", (quantity * product.getPrice()));
+        model.addAttribute("price", (userAmount * product.getPrice()));
         model.addAttribute("product", product);
-        model.addAttribute("quantity", quantity);
+        model.addAttribute("userAmount", userAmount);
         model.addAttribute("payment", payment);
 
         return "buy-now";
     }
 
-
+    //TODO:2 need to work on this
     @GetMapping("/add-to-cart")
     public String addToCart(Model model , @RequestParam int productId,
-                            @RequestParam Long quantity, Principal principal) {
-        User temp = userService.findUserByEmail(principal.getName());
+                            @RequestParam("userAmount") int userAmount, Principal principal) {
 
-        return "add-to-cart";
+        // connect cart to user then get the item user piked
+        Product productItem = productService.getProductById(productId);
+        User user = userService.findUserByEmail(principal.getName());
+        Cart userCart = user.getCart();
+        userCart.addUser(user);
+
+        // create new cart item to save the item in the cart
+        CartItems cartItems = new CartItems(userCart, productItem, userAmount);
+
+        cartItemDAO.save(cartItems);
+
+        // still working on it
+
+        return "redirect:/shop";
+    }
+
+    @GetMapping("/cart-page")
+    public String cartPage() {
+
+        return "cart-page";
     }
 
 

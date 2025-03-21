@@ -8,11 +8,11 @@ public interface PaymentService {
 
     public void SavePayment(Payment payment);
 
-    public Payment getPaymentById(long id);
+
 
     public List<Payment> getAllPayments();
 
     public void updatePayment(Payment payment);
 
-    public void deletePaymentById(long id);
+
 }

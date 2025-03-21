@@ -2,12 +2,10 @@ package com.example.ecommerce.repoTest;
 
 
 import com.example.ecommerce.entity.CartItems;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-
-public interface CartItemDAO{
-
-    void saveItemQuantity(Long quantity);
-
-    void saveCartItems(CartItems cartItems);
+@Repository
+public interface CartItemDAO extends CrudRepository<CartItems, Integer> {
 
 }
