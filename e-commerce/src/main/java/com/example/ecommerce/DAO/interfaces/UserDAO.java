@@ -1,4 +1,4 @@
-package com.example.ecommerce.DAO;
+package com.example.ecommerce.DAO.interfaces;
 
 import java.util.List;
 

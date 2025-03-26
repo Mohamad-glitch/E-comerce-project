@@ -1,4 +1,4 @@
-package com.example.ecommerce.repoTest;
+package com.example.ecommerce.DAO.interfaces;
 
 
 import com.example.ecommerce.entity.Cart;

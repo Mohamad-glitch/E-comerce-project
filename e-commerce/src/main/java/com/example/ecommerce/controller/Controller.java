@@ -3,9 +3,13 @@ package com.example.ecommerce.controller;
 
 import com.example.ecommerce.DAO.ProductDAOImpl;
 import com.example.ecommerce.entity.*;
-import com.example.ecommerce.repoTest.CartItemDAO;
-import com.example.ecommerce.repoTest.CartItemsService;
+import com.example.ecommerce.DAO.interfaces.CartItemDAO;
+import com.example.ecommerce.service.interfaces.CartItemsService;
 import com.example.ecommerce.service.*;
+import com.example.ecommerce.service.interfaces.CartService;
+import com.example.ecommerce.service.interfaces.OrderService;
+import com.example.ecommerce.service.interfaces.ProductService;
+import com.example.ecommerce.service.interfaces.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -20,9 +24,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -151,26 +153,14 @@ public class Controller {
 
 
     // this is not functioning well it will have no use
-    @GetMapping("/buy-now")
-    public String buyNow(Model model , @RequestParam Integer productId,
-                          @RequestParam("userAmount") int userAmount, Principal principal) {
-        Product product = productService.getProductById(productId);
+    @GetMapping("/check-out")
+    public String buyNow(Model model, Principal principal) {
+
         User user = userService.findUserByEmail(principal.getName());
-
-        System.out.println(userAmount);
-
-
-        Orders order = new Orders((userAmount * product.getPrice()), new Timestamp(System.currentTimeMillis()));
-        order.addProduct(product);
-        order.addUser(user);
-
         Payment payment = new Payment();
-        payment.addUser(user);
 
-        model.addAttribute("price", (userAmount * product.getPrice()));
-        model.addAttribute("product", product);
-        model.addAttribute("userAmount", userAmount);
-        model.addAttribute("payment", payment);
+        user.addPayment(payment);
+
 
         return "buy-now";
     }
@@ -220,7 +210,7 @@ public class Controller {
     }
 
 
-    //TODO: 2- give the user the advantage to change the product amount and remove it
+
     //TODO: 3- when user press checkout button take him to paying method page
     @GetMapping("/cart-page")
     public String cartPage(Principal principal, Model model) {

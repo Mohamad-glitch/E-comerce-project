@@ -1,5 +1,6 @@
 package com.example.ecommerce.DAO;
 
+import com.example.ecommerce.DAO.interfaces.ProductDAO;
 import com.example.ecommerce.entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;

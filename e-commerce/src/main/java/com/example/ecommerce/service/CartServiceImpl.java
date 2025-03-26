@@ -1,7 +1,8 @@
 package com.example.ecommerce.service;
 
-import com.example.ecommerce.DAO.CartDAO;
+import com.example.ecommerce.DAO.interfaces.CartDAO;
 import com.example.ecommerce.entity.Cart;
+import com.example.ecommerce.service.interfaces.CartService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

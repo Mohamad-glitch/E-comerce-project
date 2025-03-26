@@ -1,4 +1,4 @@
-package com.example.ecommerce.repoTest;
+package com.example.ecommerce.service.interfaces;
 
 public interface CartItemsService {
 

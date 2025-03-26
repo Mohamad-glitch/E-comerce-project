@@ -1,5 +1,6 @@
 package com.example.ecommerce.DAO;
 
+import com.example.ecommerce.DAO.interfaces.CartDAO;
 import com.example.ecommerce.entity.Cart;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;

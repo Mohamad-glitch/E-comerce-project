@@ -1,8 +1,9 @@
-package com.example.ecommerce.service;
+package com.example.ecommerce.DAO.interfaces;
+
 
 import com.example.ecommerce.entity.Orders;
 
-public interface OrderService {
+public interface OrderDAO {
 
     void saveOrder(Orders order);
 

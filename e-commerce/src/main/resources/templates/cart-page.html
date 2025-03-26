@@ -47,7 +47,9 @@
                 <p>Shipping: <span class="shipping">$5.00</span></p>
                 <p>Total: <span class="total" th:text="'$' + ${totalPrice}"></span></p>
             </div>
-            <button class="checkout-btn">Proceed to Checkout</button>
+            <form th:action="@{/check-out}" method="get">
+                <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+            </form>
         </div>
 
     </div>

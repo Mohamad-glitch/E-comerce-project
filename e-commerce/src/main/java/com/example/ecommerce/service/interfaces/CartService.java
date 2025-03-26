@@ -1,4 +1,4 @@
-package com.example.ecommerce.service;
+package com.example.ecommerce.service.interfaces;
 
 import com.example.ecommerce.entity.Cart;
 
