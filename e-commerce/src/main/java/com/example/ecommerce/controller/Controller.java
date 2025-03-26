@@ -4,6 +4,7 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.DAO.ProductDAOImpl;
 import com.example.ecommerce.entity.*;
 import com.example.ecommerce.repoTest.CartItemDAO;
+import com.example.ecommerce.repoTest.CartItemsService;
 import com.example.ecommerce.service.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,6 +21,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 
 @org.springframework.stereotype.Controller
@@ -29,11 +34,12 @@ public class Controller {
     CartService cartService;
     CartItemDAO cartItemDAO;
     OrderService orderService;
+    CartItemsService cartItemsService;
 
 
     @Autowired
     public Controller(UserServiceImpl userService, ProductServiceImpl
-            productService, CartServiceImpl cartService, CartItemDAO cartItemDAO,
+            productService, CartServiceImpl cartService, CartItemDAO cartItemDAO, CartItemsService cartItemsService,
                       ProductDAOImpl productDAOImpl, OrderServiceImpl orderService) {
         this.userService = userService;
         this.productService = productService;
@@ -41,6 +47,7 @@ public class Controller {
         this.productDAOImpl = productDAOImpl;
         this.cartItemDAO = cartItemDAO;
         this.orderService = orderService;
+        this.cartItemsService = cartItemsService;
     }
 
     // note if the user saved in the database the role should be like this ROLE_(the role u want )
@@ -168,31 +175,90 @@ public class Controller {
         return "buy-now";
     }
 
-    //TODO:2 need to work on this
+
+    // this method will save the product the user picked and save it in cart-items then send user to shop page
     @GetMapping("/add-to-cart")
-    public String addToCart(Model model , @RequestParam int productId,
+    public String addToCart(Model model , @RequestParam int productId, RedirectAttributes redirectAttributes,
                             @RequestParam("userAmount") int userAmount, Principal principal) {
 
-        // connect cart to user then get the item user piked
-        Product productItem = productService.getProductById(productId);
+        // get the item and amount of product and associate it to the user in user cart
+        Product userProduct = productService.getProductById(productId);
         User user = userService.findUserByEmail(principal.getName());
         Cart userCart = user.getCart();
-        userCart.addUser(user);
 
-        // create new cart item to save the item in the cart
-        CartItems cartItems = new CartItems(userCart, productItem, userAmount);
+        //check if there was already this item in the cart if yes add to it else save new product in DB
+        CartItems temp = cartItemDAO.getCartItemsByCartAndProduct(userCart, userProduct);
+        if(temp == null) {
 
-        cartItemDAO.save(cartItems);
+            // create new cart item to save the item in the cart
+            CartItems cartItems = new CartItems(userCart, userProduct, userAmount);
 
-        // still working on it
+            cartItemDAO.save(cartItems);
+        }else{
+
+            // check if the amount of product available in stock if yes update user amount if no return note
+            if((temp.getQuantity() + userAmount) > userProduct.getQuantity()){
+                long available = userProduct.getQuantity() - temp.getQuantity();
+
+                redirectAttributes.addFlashAttribute("errorMessage",
+                        "Only " + available + " items left in stock! Couldn't add more to your cart.");
+            }else{
+                long stillAvailable = userProduct.getQuantity()-(userAmount + temp.getQuantity());
+                temp.setQuantity(temp.getQuantity() + userAmount);
+                userProduct.setQuantity((int)stillAvailable);
+                productService.saveProduct(userProduct);
+                cartItemDAO.save(temp);
+
+            }
+
+        }
+
+
+
 
         return "redirect:/shop";
     }
 
+
+    //TODO: 2- give the user the advantage to change the product amount and remove it
+    //TODO: 3- when user press checkout button take him to paying method page
     @GetMapping("/cart-page")
-    public String cartPage() {
+    public String cartPage(Principal principal, Model model) {
+
+        // get user items count the total price of the items
+        User user = userService.findUserByEmail(principal.getName());
+        List<CartItems> userItems = cartItemDAO.getCartItemsByCart(user.getCart());
+        List<Product> products = new ArrayList<>();
+        List<Long> userAmounts = new ArrayList<>();
+        double total = 5;
+
+        for(CartItems cartItem : userItems) {
+            Product product = productService.getProductById(cartItem.getProduct().getId());
+            long userAmount = cartItem.getQuantity();
+
+
+            total += userAmount * product.getPrice();
+
+            product.setUserAmount(userAmount);
+            products.add(product);
+
+        }
+
+        // return the items in model to cart page
+        model.addAttribute("products", products);
+        model.addAttribute("userAmount", userItems);
+        model.addAttribute("totalPrice", total);
+
 
         return "cart-page";
+    }
+
+    @PostMapping("/remove-from-cart/{cartItem}")
+    public String removeFromCart(Model model, @PathVariable int cartItem) {
+        cartItemsService.deleteCartItemById(cartItem);
+
+
+        return "redirect:/cart-page";
     }
 
 

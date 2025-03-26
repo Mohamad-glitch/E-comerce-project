@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="/shop-page.css">
 </head>
 <body>
+<div th:if="${successMessage}" class="notification success">
+    <span th:text="${successMessage}"></span>
+    <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+</div>
+
+<div th:if="${errorMessage}" class="notification error">
+    <span th:text="${errorMessage}"></span>
+    <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+</div>
 <header>
     <div class="logo">E-commerce</div>
     <nav>
@@ -20,7 +29,7 @@
             </li>
             <li><a th:href="@{/shop}">Shop</a></li>
             <li><a th:href="@{/about-us}">About Us</a></li>
-            <li><a href="#">Cart</a></li>
+            <li><a th:href="@{/cart-page}">Cart</a></li>
 
             <!--if the user was logged in then he can log out if not show log in-->
             <li th:if="${#authorization.expression('isAuthenticated()')}">

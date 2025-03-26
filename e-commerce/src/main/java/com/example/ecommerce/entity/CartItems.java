@@ -14,7 +14,7 @@ public class CartItems {
     @Column(name = "id")
     private long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 

@@ -32,6 +32,9 @@ public class Product {
     @Column(name = "stock_quantity")
     private int quantity;
 
+    @Transient
+    private long userAmount;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItems> cartItems = new ArrayList<>();
 
@@ -142,7 +145,13 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public long getUserAmount() {
+        return userAmount;
+    }
 
+    public void setUserAmount(long userAmount) {
+        this.userAmount = userAmount;
+    }
 
     @Override
     public String toString() {
