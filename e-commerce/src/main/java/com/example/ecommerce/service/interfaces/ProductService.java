@@ -9,8 +9,12 @@ public interface ProductService {
 
     void saveProduct(Product product);
 
-    List<Product> getAllProducts();
+    void deleteProduct(Product product);
 
     Product getProductById(int id);
+
+    List<Product> getAllProductsByCategory(String category);
+
+    List<Product> getAllProducts();
 
 }

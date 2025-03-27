@@ -6,13 +6,11 @@ import java.util.List;
 
 public interface PaymentService {
 
-    public void SavePayment(Payment payment);
+     void SavePayment(Payment payment);
 
+     List<Payment> getAllPayments();
 
+     List<Payment> getPaymentByUserEmail(String email);
 
-    public List<Payment> getAllPayments();
-
-    public void updatePayment(Payment payment);
-
-
+    void save(Payment userInfo);
 }

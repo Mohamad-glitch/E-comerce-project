@@ -26,13 +26,8 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public void updateProduct(Product product) {
-
-    }
-
-    @Override
     public void deleteProduct(Product product) {
-
+        entityManager.remove(product);
     }
 
     @Override

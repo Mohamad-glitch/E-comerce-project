@@ -4,12 +4,8 @@ package com.example.ecommerce.controller;
 import com.example.ecommerce.DAO.ProductDAOImpl;
 import com.example.ecommerce.entity.*;
 import com.example.ecommerce.DAO.interfaces.CartItemDAO;
-import com.example.ecommerce.service.interfaces.CartItemsService;
+import com.example.ecommerce.service.interfaces.*;
 import com.example.ecommerce.service.*;
-import com.example.ecommerce.service.interfaces.CartService;
-import com.example.ecommerce.service.interfaces.OrderService;
-import com.example.ecommerce.service.interfaces.ProductService;
-import com.example.ecommerce.service.interfaces.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -24,6 +20,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,12 +34,14 @@ public class Controller {
     CartItemDAO cartItemDAO;
     OrderService orderService;
     CartItemsService cartItemsService;
+    PaymentService paymentService;
 
 
     @Autowired
-    public Controller(UserServiceImpl userService, ProductServiceImpl
-            productService, CartServiceImpl cartService, CartItemDAO cartItemDAO, CartItemsService cartItemsService,
-                      ProductDAOImpl productDAOImpl, OrderServiceImpl orderService) {
+    public Controller(UserServiceImpl userService, ProductServiceImpl productService,
+                      PaymentService paymentService, CartServiceImpl cartService, CartItemDAO cartItemDAO,
+                      CartItemsService cartItemsService, ProductDAOImpl productDAOImpl,
+                      OrderServiceImpl orderService) {
         this.userService = userService;
         this.productService = productService;
         this.cartService = cartService;
@@ -50,6 +49,7 @@ public class Controller {
         this.cartItemDAO = cartItemDAO;
         this.orderService = orderService;
         this.cartItemsService = cartItemsService;
+        this.paymentService = paymentService;
     }
 
     // note if the user saved in the database the role should be like this ROLE_(the role u want )
@@ -152,17 +152,54 @@ public class Controller {
     }
 
 
-    // this is not functioning well it will have no use
     @GetMapping("/check-out")
-    public String buyNow(Model model, Principal principal) {
+    public String buyNow(Model model, Principal principal, @RequestParam("totalPrice") double total) {
 
+        // get the user info to binding  payment method to user
         User user = userService.findUserByEmail(principal.getName());
         Payment payment = new Payment();
-
+        payment.addUser(user);
         user.addPayment(payment);
 
+        // send a model to add payment info
+        model.addAttribute("payment", payment);
+        model.addAttribute("total", total);
 
         return "buy-now";
+    }
+
+    // TODO:2 add payment API to cash out
+    @PostMapping("/paying-out")
+    public String paymentLogic(@ModelAttribute("payment") Payment userInfo, Model model,
+                               @RequestParam("total") double total ,Principal principal) {
+        // binding payment method to user and save it
+        User user = userService.findUserByEmail(principal.getName());
+        userInfo.addUser(user);
+
+        // payment logic if it's done successfully
+        paymentService.save(userInfo);
+        List<CartItems> cartItems  = user.getCart().getCartItems();
+
+        successFullyPaid(cartItems, user, total);
+
+        return "redirect:/user-page";
+    }
+
+    // remove the items from the cart and put them in ordered section
+    private void successFullyPaid(List<CartItems> cartItems, User user, Double total) {
+        Timestamp temp = new Timestamp(System.currentTimeMillis());
+        Orders orders = new Orders();
+        orders.addUser(user);
+        orders.setDate(temp);
+        orders.setPrice(total);
+
+        orderService.saveOrder(orders);
+
+
+        cartItemsService.deleteCartItemByCartId(user.getCart().getId());
+
+
+
     }
 
 
@@ -198,20 +235,13 @@ public class Controller {
                 userProduct.setQuantity((int)stillAvailable);
                 productService.saveProduct(userProduct);
                 cartItemDAO.save(temp);
-
             }
-
         }
-
-
-
 
         return "redirect:/shop";
     }
 
-
-
-    //TODO: 3- when user press checkout button take him to paying method page
+    // show the user selected items to buy and show how much would it cost total
     @GetMapping("/cart-page")
     public String cartPage(Principal principal, Model model) {
 
@@ -243,10 +273,10 @@ public class Controller {
         return "cart-page";
     }
 
+    // removing an item from user cart
     @PostMapping("/remove-from-cart/{cartItem}")
     public String removeFromCart(Model model, @PathVariable int cartItem) {
-        cartItemsService.deleteCartItemById(cartItem);
-
+        cartItemsService.deleteCartItemById((long) cartItem);
 
         return "redirect:/cart-page";
     }

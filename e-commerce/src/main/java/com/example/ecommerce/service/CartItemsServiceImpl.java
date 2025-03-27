@@ -19,9 +19,15 @@ public class CartItemsServiceImpl implements CartItemsService {
 
     @Override
     @Transactional
-    public void deleteCartItemById(int id) {
+    public void deleteCartItemById(Long id) {
         System.out.println("deleting cart item by id: " + id);
        cartItemDAO.deleteCartItemsById(id);
 
+    }
+
+    @Override
+    @Transactional
+    public void deleteCartItemByCartId(Integer id) {
+        cartItemDAO.deleteCartItemsByCartId(id);
     }
 }

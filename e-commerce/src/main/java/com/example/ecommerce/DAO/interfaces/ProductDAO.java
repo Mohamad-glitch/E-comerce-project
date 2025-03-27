@@ -9,8 +9,6 @@ public interface ProductDAO {
 
     void saveProduct(Product product);
 
-    void updateProduct(Product product);
-
     void deleteProduct(Product product);
 
     Product getProductById(int id);

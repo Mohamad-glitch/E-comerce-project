@@ -47,6 +47,17 @@ public class Payment {
     @Column(name ="cvv")
     private String cvv;
 
+    @Column(name = "country")
+    private String country;
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public Long getId() {
         return id;
     }
@@ -153,7 +164,6 @@ public class Payment {
     public String toString() {
         return "Payment{" +
                 "id=" + id +
-                ", userEmail=" + user.getEmail() +
                 ", fullName='" + fullName + '\'' +
                 ", address='" + address + '\'' +
                 ", city='" + city + '\'' +

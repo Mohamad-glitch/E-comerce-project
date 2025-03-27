@@ -45,9 +45,10 @@
                     <p>Subtotal: <span class="subtotal" th:text="${product.name} +'$' + ${product.price}"></span></p>
                 </div>
                 <p>Shipping: <span class="shipping">$5.00</span></p>
-                <p>Total: <span class="total" th:text="'$' + ${totalPrice}"></span></p>
+                <p>Total: <span class="total" th:name="totalPrice" id="totalPrice" th:text="'$' + ${totalPrice}"></span></p>
             </div>
             <form th:action="@{/check-out}" method="get">
+                <input type="hidden" th:name="totalPrice" th:id="totalPrice" th:value="${totalPrice}">
                 <button type="submit" class="checkout-btn">Proceed to Checkout</button>
             </form>
         </div>

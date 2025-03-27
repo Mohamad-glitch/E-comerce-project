@@ -5,6 +5,7 @@ import com.example.ecommerce.entity.Payment;
 import com.example.ecommerce.service.interfaces.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,21 +19,24 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentDAO = paymentDAO;
     }
 
-
+    @Transactional
     public void SavePayment(Payment payment) {
         paymentDAO.save(payment);
     }
-
 
     public List<Payment> getAllPayments() {
         return paymentDAO.findAll();
     }
 
-    public void updatePayment(Payment payment) {
-       paymentDAO.save(payment);
+    @Override
+    public List<Payment> getPaymentByUserEmail(String email) {
+        return paymentDAO.getPaymentByUserEmail(email);
     }
 
-
+    @Override
+    public void save(Payment userInfo) {
+        paymentDAO.save(userInfo);
+    }
 
 
 }

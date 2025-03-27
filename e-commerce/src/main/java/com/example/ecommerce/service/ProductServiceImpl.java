@@ -25,6 +25,12 @@ public class ProductServiceImpl implements ProductService {
         productDAO.saveProduct(product);
     }
 
+    @Override
+    @Transactional
+    public void deleteProduct(Product product) {
+        productDAO.deleteProduct(product);
+    }
+
     @Transactional
     public List<Product> getAllProducts(){
         return productDAO.getAllProducts();
@@ -33,5 +39,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductById(int id) {
         return productDAO.getProductById(id);
+    }
+
+    @Override
+    public List<Product> getAllProductsByCategory(String category) {
+        return List.of();
     }
 }

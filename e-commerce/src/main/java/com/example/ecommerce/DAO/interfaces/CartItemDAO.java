@@ -25,4 +25,8 @@ public interface CartItemDAO extends CrudRepository<CartItems, Integer> {
     @Query("delete from CartItems c where c.id =:id ")
     void deleteCartItemsById(@Param("id") long id);
 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM CartItems c where c.cart.id=:id")
+    void deleteCartItemsByCartId(@Param("id") int id);
 }
